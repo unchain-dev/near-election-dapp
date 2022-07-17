@@ -21,6 +21,7 @@ mod nft_core;
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {
+    // contract state value
     pub owner_id: AccountId,
     pub tokens_per_owner: LookupMap<AccountId, UnorderedSet<TokenId>>,
     pub tokens_per_kind: LookupMap<TokenKind, UnorderedSet<TokenId>>,
@@ -44,6 +45,7 @@ pub enum StorageKey {
 
 #[near_bindgen]
 impl Contract {
+    // function for initialization(new_default_meta)
     #[init]
     pub fn new(owner_id: AccountId, metadata: NFTContractMetadata) -> Self {
         let this = Self {
@@ -64,6 +66,7 @@ impl Contract {
         this
     }
 
+    // initialization function
     #[init]
     pub fn new_default_meta(owner_id: AccountId) -> Self {
         Self::new(

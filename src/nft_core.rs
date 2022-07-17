@@ -44,6 +44,7 @@ trait NonFungibleTokenResolver {
 #[near_bindgen]
 impl NonFungibleTokenCore for Contract {
     #[payable]
+    // transfer token
     fn nft_transfer(&mut self, receiver_id: AccountId, token_id: TokenId, memo: Option<String>) {
         assert_one_yocto();
         let sender_id = env::predecessor_account_id();
@@ -80,6 +81,7 @@ impl NonFungibleTokenCore for Contract {
             .into()
     }
 
+    // get specified token info
     fn nft_token(&self, token_id: TokenId) -> Option<JsonToken> {
         if let Some(token) = self.tokens_by_id.get(&token_id) {
             let metadata = self.token_metadata_by_id.get(&token_id).unwrap();
@@ -92,6 +94,7 @@ impl NonFungibleTokenCore for Contract {
         }
     }
 
+    // add number of likes for specified candidate
     fn nft_candidate_add_like(&mut self, token_id: TokenId) -> Option<u128> {
         if self.tokens_by_id.get(&token_id).is_some() {
             let mut old_num_of_likes = self
@@ -116,6 +119,8 @@ impl NonFungibleTokenCore for Contract {
             Some(0)
         }
     }
+
+    // get number of likes of specified candidate
     fn nft_check_candidate_like(&mut self, token_id: TokenId) -> Option<u128> {
         if self.tokens_by_id.get(&token_id).is_some() {
             let metadata = self.token_metadata_by_id.get(&token_id).unwrap();

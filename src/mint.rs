@@ -3,6 +3,8 @@ use crate::*;
 #[near_bindgen]
 impl Contract {
     #[payable]
+
+    //mint token
     pub fn nft_mint(&mut self, mut metadata: TokenMetadata, receiver_id: AccountId) {
         metadata.token_id = Some(self.token_id_counter);
         metadata.num_of_likes = Some(0);
@@ -32,10 +34,12 @@ impl Contract {
         refund_deposit(required_storage_in_bytes);
     }
 
+    // count token id
     pub fn token_id_count(&mut self) {
         self.token_id_counter = self.token_id_counter + 1;
     }
 
+    // get next token id
     pub fn show_token_id_counter(&self) -> u128 {
         self.token_id_counter
     }

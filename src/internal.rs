@@ -1,6 +1,7 @@
 use crate::*;
 use near_sdk::CryptoHash;
 
+// hash account id
 pub(crate) fn hash_account_id(account_id: &AccountId) -> CryptoHash {
     let mut hash = CryptoHash::default();
 
@@ -8,6 +9,7 @@ pub(crate) fn hash_account_id(account_id: &AccountId) -> CryptoHash {
     hash
 }
 
+// confirm caller attached one yoctoNEAR
 pub(crate) fn assert_one_yocto() {
     assert_eq!(
         env::attached_deposit(),
@@ -16,6 +18,7 @@ pub(crate) fn assert_one_yocto() {
     )
 }
 
+// refund if caller deposit too much NEAR
 pub(crate) fn refund_deposit(storage_used: u64) {
     let required_cost = env::storage_byte_cost() * Balance::from(storage_used);
     let attached_deposit = env::attached_deposit();
@@ -34,6 +37,7 @@ pub(crate) fn refund_deposit(storage_used: u64) {
 }
 
 impl Contract {
+    // remove token from map(token owner id->token id)
     pub(crate) fn internal_remove_token_from_owner(
         &mut self,
         account_id: &AccountId,
@@ -54,6 +58,7 @@ impl Contract {
         }
     }
 
+    // add token to map(token owner id->token id)
     pub(crate) fn internal_add_token_to_owner(
         &mut self,
         account_id: &AccountId,
@@ -73,6 +78,7 @@ impl Contract {
         self.tokens_per_owner.insert(account_id, &tokens_set);
     }
 
+    // add token to map(token kind->token id)
     pub(crate) fn internal_add_token_to_kind_map(
         &mut self,
         account_id: &AccountId,
@@ -93,6 +99,7 @@ impl Contract {
         self.tokens_per_kind.insert(token_kind, &tokens_set);
     }
 
+    // transfer token
     pub(crate) fn internal_transfer(
         &mut self,
         sender_id: &AccountId,
