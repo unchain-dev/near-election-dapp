@@ -16,8 +16,8 @@ pub trait NonFungibleTokenCore {
     ) -> PromiseOrValue<bool>;
 
     fn nft_token(&self, token_id: TokenId) -> Option<JsonToken>;
-    fn nft_candidate_add_like(&mut self, token_id: TokenId) -> Option<u128>;
-    fn nft_check_candidate_like(&mut self, token_id: TokenId) -> Option<u128>;
+    fn nft_return_candidate_likes(&mut self, token_id: TokenId) -> u128;
+    fn nft_add_likes_to_candidate(&mut self, token_id: TokenId);
 }
 
 #[ext_contract(ext_non_fungible_token_receiver)]
@@ -94,39 +94,26 @@ impl NonFungibleTokenCore for Contract {
         }
     }
 
-    // add number of likes for specified candidate
-    fn nft_candidate_add_like(&mut self, token_id: TokenId) -> Option<u128> {
-        if self.tokens_by_id.get(&token_id).is_some() {
-            let mut old_num_of_likes = self
-                .token_metadata_by_id
-                .get(&token_id)
-                .unwrap()
-                .num_of_likes;
-            log!("Former number of likes is:{}", old_num_of_likes.unwrap());
-            old_num_of_likes.replace(old_num_of_likes.unwrap() + 1);
-            log!("New number of likes is:{}", old_num_of_likes.unwrap());
-            log!(
-                "New number of likes in contract is:{}",
-                self.token_metadata_by_id
-                    .get(&token_id)
-                    .unwrap()
-                    .num_of_likes
-                    .unwrap()
-            );
-
-            old_num_of_likes
-        } else {
-            Some(0)
+    fn nft_add_likes_to_candidate(&mut self, token_id: TokenId) {
+        if self.likes_per_candidate.get(&token_id).is_some() {
+            let mut likes = self.likes_per_candidate.get(&token_id);
+            likes.replace(likes.unwrap() + 1 as u128);
+            self.likes_per_candidate.insert(&token_id, &likes.unwrap());
         }
     }
 
     // get number of likes of specified candidate
-    fn nft_check_candidate_like(&mut self, token_id: TokenId) -> Option<u128> {
+    fn nft_return_candidate_likes(&mut self, token_id: TokenId) -> u128 {
         if self.tokens_by_id.get(&token_id).is_some() {
-            let metadata = self.token_metadata_by_id.get(&token_id).unwrap();
-            metadata.num_of_likes
+            log!(
+                "likes of token_id{} is {}",
+                token_id,
+                self.likes_per_candidate.get(&token_id).unwrap()
+            );
+            self.likes_per_candidate.get(&token_id).unwrap()
         } else {
-            Some(0)
+            log!("0");
+            0
         }
     }
 }

@@ -81,22 +81,25 @@ impl Contract {
     // add token to map(token kind->token id)
     pub(crate) fn internal_add_token_to_kind_map(
         &mut self,
-        account_id: &AccountId,
         token_id: &TokenId,
-        token_kind: &TokenKind,
+        token_kind: TokenKind,
     ) {
-        let mut tokens_set = self.tokens_per_kind.get(token_kind).unwrap_or_else(|| {
-            UnorderedSet::new(
-                StorageKey::TokensPerKindInner {
-                    token_kind_hash: hash_account_id(&account_id),
-                }
-                .try_to_vec()
-                .unwrap(),
-            )
-        });
+        let token_kind_clone = token_kind.clone();
+        let mut tokens_set = self
+            .tokens_per_kind
+            .get(&token_kind_clone)
+            .unwrap_or_else(|| {
+                UnorderedSet::new(
+                    StorageKey::TokensPerKindInner {
+                        token_kind: token_kind,
+                    }
+                    .try_to_vec()
+                    .unwrap(),
+                )
+            });
 
-        tokens_set.insert(token_id);
-        self.tokens_per_kind.insert(token_kind, &tokens_set);
+        tokens_set.insert(&token_id);
+        self.tokens_per_kind.insert(&token_kind_clone, &tokens_set);
     }
 
     // transfer token

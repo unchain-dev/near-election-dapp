@@ -1,5 +1,4 @@
 use crate::*;
-use chrono::Utc;
 
 #[near_bindgen]
 impl Contract {

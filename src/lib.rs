@@ -29,6 +29,7 @@ pub struct Contract {
     pub token_metadata_by_id: UnorderedMap<TokenId, TokenMetadata>,
     pub metadata: LazyOption<NFTContractMetadata>,
     pub token_id_counter: u128,
+    pub likes_per_candidate: LookupMap<TokenId, u128>,
 }
 
 #[derive(BorshSerialize)]
@@ -36,11 +37,12 @@ pub enum StorageKey {
     TokensPerOwner,
     TokensPerKind,
     TokensPerOwnerInner { account_id_hash: CryptoHash },
-    TokensPerKindInner { token_kind_hash: CryptoHash },
+    TokensPerKindInner { token_kind: TokenKind },
     TokensById,
     TokenMetadataById,
     TokensPerTypeInner { token_type_hash: CryptoHash },
     NFTContractMetadata,
+    LikesPerCandidate,
 }
 
 #[near_bindgen]
@@ -61,6 +63,9 @@ impl Contract {
                 Some(&metadata),
             ),
             token_id_counter: 0,
+            likes_per_candidate: LookupMap::new(
+                StorageKey::LikesPerCandidate.try_to_vec().unwrap(),
+            ),
         };
 
         this
@@ -73,7 +78,7 @@ impl Contract {
             owner_id,
             NFTContractMetadata {
                 spec: "nft-1.0.0".to_string(),
-                name: "NFT Tutorial Contract".to_string(),
+                name: "Near Vote Contract".to_string(),
                 icon_uri: "https://img.icons8.com/external-justicon-lineal-color-justicon/344/external-vote-voting-justicon-lineal-color-justicon.png".to_string(),
                 reference: "This contract is design for fair election!".to_string(),
             },
