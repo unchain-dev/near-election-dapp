@@ -18,6 +18,9 @@ pub trait NonFungibleTokenCore {
     fn nft_token(&self, token_id: TokenId) -> Option<JsonToken>;
     fn nft_return_candidate_likes(&mut self, token_id: TokenId) -> u128;
     fn nft_add_likes_to_candidate(&mut self, token_id: TokenId);
+    fn check_voter_has_been_added(&self, voter_id: AccountId) -> TokenId;
+    fn check_voter_has_voted(&self, voter_id: AccountId) -> bool;
+    fn voter_voted(&mut self, voter_id: AccountId);
 }
 
 #[ext_contract(ext_non_fungible_token_receiver)]
@@ -114,6 +117,26 @@ impl NonFungibleTokenCore for Contract {
         } else {
             log!("0");
             0
+        }
+    }
+
+    fn voter_voted(&mut self, voter_id: AccountId) {
+        self.voted_voter_list.insert(&voter_id, &(0 as u128));
+    }
+
+    fn check_voter_has_been_added(&self, voter_id: AccountId) -> TokenId {
+        if self.added_voter_list.get(&voter_id).is_some() {
+            return self.added_voter_list.get(&voter_id).unwrap();
+        } else {
+            0
+        }
+    }
+
+    fn check_voter_has_voted(&self, voter_id: AccountId) -> bool {
+        if self.voted_voter_list.get(&voter_id).is_some() {
+            return true;
+        } else {
+            false
         }
     }
 }
