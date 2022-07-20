@@ -28,7 +28,7 @@ impl Contract {
         self.internal_add_token_to_owner(&token.owner_id, &token_id);
         self.internal_add_token_to_kind_map(&token_id, token_kind);
         self.likes_per_candidate
-            .insert(&self.token_id_counter, &(0 as u128));
+            .insert(&self.token_id_counter, &(0 as Likes));
         self.added_voter_list
             .insert(&receiver_id_clone, &self.token_id_counter);
 

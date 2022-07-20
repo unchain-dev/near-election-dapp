@@ -4,6 +4,7 @@ pub type CandidateName = String;
 pub type TokenKind = String;
 pub type HasVoted = bool;
 pub type ReceiverId = AccountId;
+pub type Likes = f32;
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize, Clone)]
 #[serde(crate = "near_sdk::serde")]

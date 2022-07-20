@@ -16,7 +16,7 @@ pub trait NonFungibleTokenCore {
     ) -> PromiseOrValue<bool>;
 
     fn nft_token(&self, token_id: TokenId) -> Option<JsonToken>;
-    fn nft_return_candidate_likes(&mut self, token_id: TokenId) -> u128;
+    fn nft_return_candidate_likes(&self, token_id: TokenId) -> Likes;
     fn nft_add_likes_to_candidate(&mut self, token_id: TokenId);
     fn check_voter_has_been_added(&self, voter_id: AccountId) -> TokenId;
     fn check_voter_has_voted(&self, voter_id: AccountId) -> bool;
@@ -100,23 +100,17 @@ impl NonFungibleTokenCore for Contract {
     fn nft_add_likes_to_candidate(&mut self, token_id: TokenId) {
         if self.likes_per_candidate.get(&token_id).is_some() {
             let mut likes = self.likes_per_candidate.get(&token_id);
-            likes.replace(likes.unwrap() + 1 as u128);
+            likes.replace(likes.unwrap() + 1 as Likes);
             self.likes_per_candidate.insert(&token_id, &likes.unwrap());
         }
     }
 
     // get number of likes of specified candidate
-    fn nft_return_candidate_likes(&mut self, token_id: TokenId) -> u128 {
+    fn nft_return_candidate_likes(&self, token_id: TokenId) -> Likes {
         if self.tokens_by_id.get(&token_id).is_some() {
-            log!(
-                "likes of token_id{} is {}",
-                token_id,
-                self.likes_per_candidate.get(&token_id).unwrap()
-            );
             self.likes_per_candidate.get(&token_id).unwrap()
         } else {
-            log!("0");
-            0
+            0 as Likes
         }
     }
 

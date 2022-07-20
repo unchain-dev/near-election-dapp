@@ -73,4 +73,16 @@ impl Contract {
             .map(|token_id| self.nft_token(token_id.clone()).unwrap())
             .collect()
     }
+
+    pub fn if_election_closed(&self) -> bool {
+        self.is_election_closed
+    }
+
+    pub fn close_election(&mut self) {
+        self.is_election_closed = true;
+    }
+
+    pub fn reopen_election(&mut self) {
+        self.is_election_closed = false;
+    }
 }
