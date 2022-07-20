@@ -30,7 +30,6 @@ pub struct TokenMetadata {
     pub candidate_manifest: Option<String>,
     pub token_kind: String,
     pub token_id: Option<u128>,
-    pub num_of_likes: Option<u128>,
 }
 
 // metadata of Token Owner

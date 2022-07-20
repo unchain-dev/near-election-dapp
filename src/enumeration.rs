@@ -74,14 +74,17 @@ impl Contract {
             .collect()
     }
 
+    // check if election is closed
     pub fn if_election_closed(&self) -> bool {
         self.is_election_closed
     }
 
+    // close election
     pub fn close_election(&mut self) {
         self.is_election_closed = true;
     }
 
+    // reopen election
     pub fn reopen_election(&mut self) {
         self.is_election_closed = false;
     }

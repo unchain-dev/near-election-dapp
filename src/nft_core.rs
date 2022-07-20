@@ -1,19 +1,8 @@
 use crate::*;
-use near_sdk::{ext_contract, log, Gas, PromiseResult};
-
-const GAS_FOR_RESOLVE_TRANSFER: Gas = Gas(10_000_000_000_000);
-const GAS_FOR_NFT_ON_TRANSFER: Gas = Gas(25_000_000_000_000);
+use near_sdk::ext_contract;
 
 pub trait NonFungibleTokenCore {
     fn nft_transfer(&mut self, receiver_id: AccountId, token_id: TokenId, memo: Option<String>);
-
-    fn nft_transfer_call(
-        &mut self,
-        receiver_id: AccountId,
-        token_id: TokenId,
-        memo: Option<String>,
-        msg: String,
-    ) -> PromiseOrValue<bool>;
 
     fn nft_token(&self, token_id: TokenId) -> Option<JsonToken>;
     fn nft_return_candidate_likes(&self, token_id: TokenId) -> Likes;
@@ -34,16 +23,6 @@ trait NonFungibleTokenReceiver {
     ) -> Promise;
 }
 
-#[ext_contract(ext_self)]
-trait NonFungibleTokenResolver {
-    fn nft_resolve_transfer(
-        &mut self,
-        owner_id: AccountId,
-        receiver_id: AccountId,
-        token_id: TokenId,
-    ) -> bool;
-}
-
 #[near_bindgen]
 impl NonFungibleTokenCore for Contract {
     #[payable]
@@ -53,35 +32,6 @@ impl NonFungibleTokenCore for Contract {
         let sender_id = env::predecessor_account_id();
 
         self.internal_transfer(&sender_id, &receiver_id, &token_id, memo);
-    }
-
-    #[payable]
-    fn nft_transfer_call(
-        &mut self,
-        receiver_id: AccountId,
-        token_id: TokenId,
-        memo: Option<String>,
-        msg: String,
-    ) -> PromiseOrValue<bool> {
-        assert_one_yocto();
-        let sender_id = env::predecessor_account_id();
-
-        let previous_token = self.internal_transfer(&sender_id, &receiver_id, &token_id, memo);
-
-        ext_non_fungible_token_receiver::ext(receiver_id.clone())
-            .with_static_gas(GAS_FOR_NFT_ON_TRANSFER)
-            .nft_on_transfer(
-                sender_id,
-                previous_token.owner_id.clone(),
-                token_id.clone(),
-                msg,
-            )
-            .then(
-                Self::ext(env::current_account_id())
-                    .with_static_gas(GAS_FOR_RESOLVE_TRANSFER)
-                    .nft_resolve_transfer(previous_token.owner_id, receiver_id, token_id),
-            )
-            .into()
     }
 
     // get specified token info
@@ -114,10 +64,12 @@ impl NonFungibleTokenCore for Contract {
         }
     }
 
+    // add info(key: receiver id, value: number ) to map(-> this list is for check voter has already voted)
     fn voter_voted(&mut self, voter_id: AccountId) {
         self.voted_voter_list.insert(&voter_id, &(0 as u128));
     }
 
+    // check if voter id is in added-list
     fn check_voter_has_been_added(&self, voter_id: AccountId) -> TokenId {
         if self.added_voter_list.get(&voter_id).is_some() {
             return self.added_voter_list.get(&voter_id).unwrap();
@@ -126,51 +78,12 @@ impl NonFungibleTokenCore for Contract {
         }
     }
 
+    // check if voter id is in voted-list
     fn check_voter_has_voted(&self, voter_id: AccountId) -> bool {
         if self.voted_voter_list.get(&voter_id).is_some() {
             return true;
         } else {
             false
         }
-    }
-}
-
-#[near_bindgen]
-impl NonFungibleTokenResolver for Contract {
-    #[private]
-    fn nft_resolve_transfer(
-        &mut self,
-        owner_id: AccountId,
-        receiver_id: AccountId,
-        token_id: TokenId,
-    ) -> bool {
-        if let PromiseResult::Successful(value) = env::promise_result(0) {
-            if let Ok(return_token) = near_sdk::serde_json::from_slice::<bool>(&value) {
-                if !return_token {
-                    return true;
-                }
-            }
-        }
-
-        let mut token = if let Some(token) = self.tokens_by_id.get(&token_id) {
-            if token.owner_id != receiver_id {
-                return true;
-            }
-            token
-        } else {
-            return true;
-        };
-
-        log!("Return {} from @{} to @{}", token_id, receiver_id, owner_id);
-
-        self.internal_remove_token_from_owner(&receiver_id, &token_id);
-
-        self.internal_add_token_to_owner(&owner_id, &token_id);
-
-        token.owner_id = owner_id;
-
-        self.tokens_by_id.insert(&token_id, &token);
-
-        false
     }
 }
