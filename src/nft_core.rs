@@ -5,11 +5,7 @@ pub trait NonFungibleTokenCore {
     fn nft_transfer(&mut self, receiver_id: AccountId, token_id: TokenId, memo: Option<String>);
 
     fn nft_token(&self, token_id: TokenId) -> Option<JsonToken>;
-    fn nft_return_candidate_likes(&self, token_id: TokenId) -> Likes;
     fn nft_add_likes_to_candidate(&mut self, token_id: TokenId);
-    fn check_voter_has_been_added(&self, voter_id: AccountId) -> TokenId;
-    fn check_voter_has_voted(&self, voter_id: AccountId) -> bool;
-    fn voter_voted(&mut self, voter_id: AccountId);
 }
 
 #[ext_contract(ext_non_fungible_token_receiver)]
@@ -52,38 +48,6 @@ impl NonFungibleTokenCore for Contract {
             let mut likes = self.likes_per_candidate.get(&token_id);
             likes.replace(likes.unwrap() + 1 as Likes);
             self.likes_per_candidate.insert(&token_id, &likes.unwrap());
-        }
-    }
-
-    // get number of likes of specified candidate
-    fn nft_return_candidate_likes(&self, token_id: TokenId) -> Likes {
-        if self.tokens_by_id.get(&token_id).is_some() {
-            self.likes_per_candidate.get(&token_id).unwrap()
-        } else {
-            0 as Likes
-        }
-    }
-
-    // add info(key: receiver id, value: number ) to map(-> this list is for check voter has already voted)
-    fn voter_voted(&mut self, voter_id: AccountId) {
-        self.voted_voter_list.insert(&voter_id, &(0 as u128));
-    }
-
-    // check if voter id is in added-list
-    fn check_voter_has_been_added(&self, voter_id: AccountId) -> TokenId {
-        if self.added_voter_list.get(&voter_id).is_some() {
-            return self.added_voter_list.get(&voter_id).unwrap();
-        } else {
-            0
-        }
-    }
-
-    // check if voter id is in voted-list
-    fn check_voter_has_voted(&self, voter_id: AccountId) -> bool {
-        if self.voted_voter_list.get(&voter_id).is_some() {
-            return true;
-        } else {
-            false
         }
     }
 }

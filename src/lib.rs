@@ -7,12 +7,14 @@ use near_sdk::{
     ReceiptIndex,
 };
 
+pub use crate::confirm::*;
 pub use crate::enumeration::*;
 use crate::internal::*;
 pub use crate::metadata::*;
 pub use crate::mint::*;
 pub use crate::nft_core::*;
 
+mod confirm;
 mod enumeration;
 mod internal;
 mod metadata;
