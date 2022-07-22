@@ -7,6 +7,10 @@ impl Contract {
     //mint token
     pub fn nft_mint(&mut self, mut metadata: TokenMetadata, receiver_id: AccountId) {
         // set token id
+        assert!(
+            !(&self.is_election_closed),
+            "You can add candidate or voter because this election has been closed!"
+        );
         metadata.token_id = Some(self.token_id_counter);
         let initial_storage_usage = env::storage_usage();
         let receiver_id_clone = receiver_id.clone();

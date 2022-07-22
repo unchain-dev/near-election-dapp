@@ -1,3 +1,5 @@
+use near_sdk::log;
+
 use crate::*;
 
 #[near_bindgen]
@@ -9,6 +11,7 @@ impl Contract {
 
     // close election
     pub fn close_election(&mut self) {
+        log!("{}", &self.is_election_closed);
         self.is_election_closed = true;
     }
 

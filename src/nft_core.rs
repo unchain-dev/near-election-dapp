@@ -24,6 +24,10 @@ impl NonFungibleTokenCore for Contract {
     #[payable]
     // transfer token
     fn nft_transfer(&mut self, receiver_id: AccountId, token_id: TokenId, memo: Option<String>) {
+        assert!(
+            !(&self.is_election_closed),
+            "You can no longer vote because it's been closed!"
+        );
         assert_one_yocto();
         let sender_id = env::predecessor_account_id();
 
