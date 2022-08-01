@@ -26,4 +26,4 @@
     near deploy --wasm-file target/wasm32-unknown-unknown/release/near_voting_contract.wasm --accountId $NFT_CONTRACT_ID && near call $NFT_CONTRACT_ID new_default_meta '{"owner_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID
 ```
 
-3. これでコントラクトの準備は完了です。では[こちら](https://github.com/honganji/near-voting-app-release)からコードを clone した後、README.md の通りに準備をしてアプリを起動させましょう！
+3. これでコントラクトの準備は完了です。では[こちら](https://github.com/honganji/near-election-dapp-frontend)からコードを clone した後、README.md の通りに準備をしてアプリを起動させましょう！
