@@ -108,7 +108,6 @@ impl Contract {
         sender_id: &AccountId,
         receiver_id: &AccountId,
         token_id: &TokenId,
-        memo: Option<String>,
     ) -> TokenOwner {
         let token = self.tokens_by_id.get(token_id).expect("No token");
 
@@ -130,11 +129,6 @@ impl Contract {
         };
 
         self.tokens_by_id.insert(token_id, &new_token);
-
-        if let Some(memo) = memo {
-            env::log_str(&format!("Memo: {}", memo).to_string());
-        }
-
         token
     }
 }

@@ -35,8 +35,8 @@ impl Contract {
         from_index: Option<U128>,
         limit: Option<u64>,
     ) -> Vec<JsonToken> {
-        let tokens_for_kind_set = self.tokens_per_owner.get(&account_id);
-        let tokens = if let Some(tokens_for_kind_set) = tokens_for_kind_set {
+        let tokens_for_owner_set = self.tokens_per_owner.get(&account_id);
+        let tokens = if let Some(tokens_for_kind_set) = tokens_for_owner_set {
             tokens_for_kind_set
         } else {
             return vec![];

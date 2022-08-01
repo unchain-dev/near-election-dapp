@@ -2,24 +2,21 @@ use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LazyOption, LookupMap, UnorderedMap, UnorderedSet};
 use near_sdk::json_types::U128;
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::{
-    env, near_bindgen, AccountId, Balance, CryptoHash, PanicOnDefault, Promise, PromiseOrValue,
-    ReceiptIndex,
-};
+use near_sdk::{env, near_bindgen, AccountId, Balance, CryptoHash, PanicOnDefault, Promise};
 
-pub use crate::confirm::*;
-pub use crate::enumeration::*;
-use crate::internal::*;
-pub use crate::metadata::*;
-pub use crate::mint::*;
-pub use crate::nft_core::*;
-
-mod confirm;
 mod enumeration;
 mod internal;
 mod metadata;
 mod mint;
 mod nft_core;
+mod vote;
+
+pub use crate::enumeration::*;
+use crate::internal::*;
+pub use crate::metadata::*;
+pub use crate::mint::*;
+pub use crate::nft_core::*;
+pub use vote::*;
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
@@ -90,8 +87,7 @@ impl Contract {
             NFTContractMetadata {
                 spec: "nft-1.0.0".to_string(),
                 name: "Near Vote Contract".to_string(),
-                icon_uri: "https://img.icons8.com/external-justicon-lineal-color-justicon/344/external-vote-voting-justicon-lineal-color-justicon.png".to_string(),
-                reference: "This contract is design for fair election!".to_string(),
+                description: "This contract is design for fair election!".to_string(),
             },
         )
     }

@@ -13,8 +13,7 @@ pub type Likes = f32;
 pub struct NFTContractMetadata {
     pub spec: String,
     pub name: String,
-    pub icon_uri: String,
-    pub reference: String,
+    pub description: String,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
