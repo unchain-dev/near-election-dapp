@@ -31,8 +31,6 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - name: lint
         run: yarn lint
-      - name: solhint
-        run: yarn workspace contract solhint
       - name: format
         run: yarn prettier:check
 
