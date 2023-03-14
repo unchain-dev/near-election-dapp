@@ -51,7 +51,6 @@ impl Contract {
             .collect()
     }
 
-    // get tokens for specified kind(vote ticket or candidate info)
     pub fn nft_tokens_for_kind(
         &self,
         token_kind: TokenKind,

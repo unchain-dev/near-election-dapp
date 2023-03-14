@@ -87,7 +87,7 @@ impl Contract {
             NFTContractMetadata {
                 spec: "nft-1.0.0".to_string(),
                 name: "Near Vote Contract".to_string(),
-                description: "This contract is design for fair election!".to_string(),
+                reference: "This contract is design for fair election!".to_string(),
             },
         )
     }

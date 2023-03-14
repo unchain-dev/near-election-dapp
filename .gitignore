@@ -1,2 +1,8 @@
-/target
-/Cargo.lock
+**/yarn-error.log*
+
+# dependencies
+**/node_modules
+
+# misc
+**/.DS_Store
+**/.parcel-cache
