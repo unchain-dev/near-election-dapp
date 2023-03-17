@@ -1,7 +1,7 @@
 [package]
-name = "near-voting-contract"
+name = "near-election-dapp-contract"
 version = "0.1.0"
-authors = ["Tonny", "yujicavs@icloud.com"]
+authors = ["YOUR_NAME", "YOUR_MAIL_ADDRESS"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

@@ -13,13 +13,11 @@ pub type Likes = f32;
 pub struct NFTContractMetadata {
     pub spec: String,
     pub name: String,
-    pub description: String,
+    pub reference: String,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
 #[serde(crate = "near_sdk::serde")]
-
-//metadata of Token
 pub struct TokenMetadata {
     pub title: Option<String>,
     pub description: Option<String>,
@@ -31,7 +29,6 @@ pub struct TokenMetadata {
     pub token_id: Option<u128>,
 }
 
-// metadata of Token Owner
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct TokenOwner {
     pub owner_id: AccountId,

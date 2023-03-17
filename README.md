@@ -1,33 +1,36 @@
-## 🎫 **Near Election Contract**
+## ✅NEAR-Election-dApp(prototype)
 
-## Web サイト
+本レポジトリは NEAR-Election-dApp の完成版を示したものになります。
 
-作成済みのアプリを見たい方は[こちら](https://tonny-near-election-dapp.netlify.app/)からご覧ください。
+以下の手順を実行することで NEAR-Election-dApp の挙動を確認できます。
 
-## **Quick Start**
+## レポジトリのクローン
 
----
+[NEAR-Election-dApp のリポジトリ](https://github.com/unchain-tech/NEAR-Election-dApp)から NEAR-Election-dApp をクローンします。
 
-1. [こちら](https://wallet.testnet.near.org/)で新しい wallet を作成してください
+### コントラクトとフロントの準備
 
-2. 作成した Wallet の ID を`YOUR_WALLET_ID`に代入して、下のコードをターミナルで走らせてください。
+1. コントラクト開発の環境構築を行う
 
-```
-    export NFT_CONTRACT_ID="YOUR_WALLET_ID"
-```
+[NEAR-Election-dApp の教材](https://app.unchain.tech/learn/NEAR-Election-dApp/ja/0/2/)のうち section0-lessen2 の環境構築に従ってコントラクトが動くような環境を作りましょう。
 
-（例えば YOUR_CONTRACT_ID には dev_account.testnet などが入ることになります)
+2. ウォレットの作成とアドレスの取得
 
-3. 下のコードをターミナルで走らせてログインしてください
+[NEAR-Election-dApp の教材](https://app.unchain.tech/learn/NEAR-Election-dApp/ja/1/4/)のうち section0-lessen2 の`mintしてみよう`以下の部分に記載してあるウォレットの作成を行いましょう。また、`exportコマンド`を用いて作成したウォレットアドレスをターミナルで使用できるようにしましょう。
 
-```
-    near login
-```
-
-4. 下のコードをターミナルで走らせてコンパイル、デプロイ、コントラクトの初期化をしてください
+また`packages/client/`下に neardev ディレクトリを作成し、その直下に`dev-account.env`というファイルを作成しましょう。
+その中身は下のようにし、`YOUR_WALLET_ADDRESS`には先ほど作成したウォレットアドレスを入れましょう。
 
 ```
-    near deploy --wasm-file target/wasm32-unknown-unknown/release/near_voting_contract.wasm --accountId $NFT_CONTRACT_ID && near call $NFT_CONTRACT_ID new_default_meta '{"owner_id": "'$NFT_CONTRACT_ID'"}' --accountId $NFT_CONTRACT_ID
+CONTRACT_NAME=YOUR_WALLET_ADDRESS
 ```
 
-3. これでコントラクトの準備は完了です。では[こちら](https://github.com/honganji/near-election-dapp-frontend)からコードを clone した後、README.md の通りに準備をしてアプリを起動させましょう！
+3. フロントエンドを起動し、動作確認
+
+下のコマンドを実行することでフロントエンドを起動して動作確認をしましょう。
+
+```
+yarn client dev
+```
+
+動作確認は[NEAR-Election-dApp の教材](https://app.unchain.tech/learn/NEAR-Election-dApp/ja/3/1/)のうち section3-lessen1 を参考に行いましょう。
